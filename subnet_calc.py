@@ -22,6 +22,26 @@ def octet_to_binary(octet):
 
     return listReturn
 
+def prefix_to_mask(prefix):
+    try:
+        prefix = int(prefix)
+
+    except ValueError:
+        print("Error! Please re-enter the value!")
+        return
+
+    newIP = []
+    if not (0 <= prefix <= 32):
+        print("Incorrect Prefix!")
+        return
+    else:
+        for i in range(0,prefix):
+            newIP.append(1)
+        while len(newIP) != 32:
+            newIP.append(0)
+
+    return newIP
+
 #Function that take in IP address as a parameter, checks and valify it and then convert it into binaries.
 def checkIP(ipAdress):
 
@@ -42,8 +62,27 @@ def checkIP(ipAdress):
         if not (0 <= i <= 255):
             print("Incorrect IP Address!")
             return
-        v.append(octet_to_binary(i))
+        v.extend(octet_to_binary(i))
     
     return v
 
-print(checkIP("192.168.1.0"))
+def network_address(ip_bits, mask_bits):
+    try:
+        if type(ip_bits) == "list":
+            for i in range(0,len(ip_bits)):
+                ip_bits[i] = int(ip_bits[i])
+        else:
+            return
+        if type(mask_bits) == "list":
+            for i in range(0,len(mask_bits)):
+                mask_bits[i] = int(mask_bits[i])
+        else:
+            return
+
+    except ValueError:
+        print("Error here!")
+        return
+
+    return ip_bits
+
+print("network_address: ",network_address("192.168.1.0",-1))
