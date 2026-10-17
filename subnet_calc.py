@@ -92,13 +92,24 @@ def network_address(ip_bits, mask_bits):
     list_return = []
 
     for i in range(0,32):
-        if ip_bits[i] == int(1) and mask_bits[i] == int(1):
+        if ip_bits[i] == 1 and mask_bits[i] == 1:
             list_return.append(1)
         else:
             list_return.append(0)
     return list_return
 
+def broadcast_address(ip_bits, mask_bits):
+    list_return = []
 
-#print(checkIP("192.168.1.0"))
-#print(prefix_to_mask(24))
-print("network_address: ",network_address(checkIP("192.168.1.10"),prefix_to_mask(24)))
+    for i in range(0,32):
+        if ip_bits[i] == 0 and mask_bits[i] == 1:
+            list_return.append(0)
+        else:
+            list_return.append(1)
+
+    return list_return
+    
+ip = checkIP("192.168.1.10")
+prefix = prefix_to_mask(24)
+print("network_address: ",network_address(ip,prefix))
+print("broadcast_address: ",broadcast_address(ip,prefix))
