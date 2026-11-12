@@ -86,7 +86,8 @@ def checkIP(ipAdress):
     
     return v
 
-#Function that takes ip_bits and mask_bits and run through a bitwise AND equation.
+#Function that computes the network address by ANDing the IP with the mask 
+#- Keeps the network bits, zeroes the host bits.
 def network_address(ip_bits, mask_bits):
     #a list that store the result of the bitwise AND.
     list_return = []
@@ -98,6 +99,8 @@ def network_address(ip_bits, mask_bits):
             list_return.append(0)
     return list_return
 
+#Function that computes the network address - keeps the network bits,
+#set the host bits to 1(the mirror of the network address).
 def broadcast_address(ip_bits, mask_bits):
     list_return = []
 
@@ -108,8 +111,25 @@ def broadcast_address(ip_bits, mask_bits):
             list_return.append(1)
 
     return list_return
+
+#
+#
+def host_count(mask_bits):
+    count = 0 
+
+    for i in mask_bits:
+        if i == 0:
+            count+=1
+
+    if count == 0:
+        return 1
+    elif count == 1:
+        return 2
+    else:
+        return (2**count)-2
     
-ip = checkIP("192.168.1.10")
-prefix = prefix_to_mask(24)
-print("network_address: ",network_address(ip,prefix))
-print("broadcast_address: ",broadcast_address(ip,prefix))
+#ip = checkIP("192.168.1.10")
+prefix = prefix_to_mask(30)
+#print("network_address: ",network_address(ip,prefix))
+#print("broadcast_address: ",broadcast_address(ip,prefix))
+print(host_count(prefix))
