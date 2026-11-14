@@ -112,8 +112,8 @@ def broadcast_address(ip_bits, mask_bits):
 
     return list_return
 
-#
-#
+#Turns a bit list into a number so we can do arithmetic on it 
+# (e.g. network + 1) and print it in readable form.”
 def host_count(mask_bits):
     count = 0 
 
@@ -127,9 +127,27 @@ def host_count(mask_bits):
         return 2
     else:
         return (2**count)-2
+
+#A function that convert the Binary back into Decimal.
+def bits_to_number(bits):
+    bit = list(reversed(bits))
+    return_int = 0
+    i = 0
+
+    # while len(bits):
+    #     v = bits.pop()
+    #     bit.append(v)
+
+    while i in range(len(bit)):
+        return_int += bit[i] * (2**i)
+        i+=1
+
+    return return_int
     
 #ip = checkIP("192.168.1.10")
-prefix = prefix_to_mask(30)
+# prefix = prefix_to_mask(30)
 #print("network_address: ",network_address(ip,prefix))
 #print("broadcast_address: ",broadcast_address(ip,prefix))
-print(host_count(prefix))
+# print(host_count(prefix))
+print(bits_to_number([1,1,1,1,1,1,1,1]))
+print(bits_to_number([1,1,0,0,0,0,0,0]))
