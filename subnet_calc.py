@@ -8,7 +8,7 @@ def octet_to_binary(octet):
         #can be divied by 2
         while octet != 0 :
             list.append(octet%2)
-            octet = int(octet/2)
+            octet = octet//2
 
         #check whether if the remainder output are 8 decimals numbers,
         #if it is, it will append the digits into the new List FILO style.
@@ -112,8 +112,7 @@ def broadcast_address(ip_bits, mask_bits):
 
     return list_return
 
-#Turns a bit list into a number so we can do arithmetic on it 
-# (e.g. network + 1) and print it in readable form.”
+#Counts usable hosts: 2^(host bits) − 2, with special cases for /31 and /32.
 def host_count(mask_bits):
     count = 0 
 
@@ -132,22 +131,73 @@ def host_count(mask_bits):
 def bits_to_number(bits):
     bit = list(reversed(bits))
     return_int = 0
-    i = 0
 
-    # while len(bits):
-    #     v = bits.pop()
-    #     bit.append(v)
-
-    while i in range(len(bit)):
+    for i in range(len(bit)):
         return_int += bit[i] * (2**i)
-        i+=1
 
     return return_int
+
+#A function that convert numbers into 32-bits binaries.
+def number_to_bits(number):
+    return_list = []
+
+    #runs a while loop to get the binary result.
+    while number != 0:
+        return_list.append(number%2)
+        number = number//2
+
+    #32-bits check, adds 0 to the end to make up 32-bits if it's under 32bits.
+    while len(return_list) < 32:
+        return_list.append(0)
+    return_list.reverse()
+
+    return return_list
+
+#A function convert 32-bits into ip address.
+def bits_to_ip(bits):
+    ans = []
+
+    #slicing through the index every 8 int.
+    for i in range(0,32,8):
+        octet_ans = bits[i:i + 8]
+        ans.append(str(bits_to_number(octet_ans)))
+    return ".".join(ans)
     
-#ip = checkIP("192.168.1.10")
-# prefix = prefix_to_mask(30)
-#print("network_address: ",network_address(ip,prefix))
-#print("broadcast_address: ",broadcast_address(ip,prefix))
-# print(host_count(prefix))
-print(bits_to_number([1,1,1,1,1,1,1,1]))
-print(bits_to_number([1,1,0,0,0,0,0,0]))
+ip = checkIP("192.168.1.10")
+prefix = prefix_to_mask(24)
+network = network_address(ip,prefix)
+broadcast = broadcast_address(ip,prefix)
+first_usable = bits_to_number(network) + 1
+last_usable = bits_to_number(broadcast) - 1
+
+ip2 = checkIP("10.0.0.0")
+prefix2 = prefix_to_mask(8)
+network2 = network_address(ip2,prefix2)
+broadcast2 = broadcast_address(ip2,prefix2)
+first_usable2 = bits_to_number(network2) + 1
+last_usable2 = bits_to_number(broadcast2) - 1
+
+ip3 = checkIP("172.16.5.4")
+prefix3 = prefix_to_mask(26)
+network3 = network_address(ip3,prefix3)
+broadcast3 = broadcast_address(ip3,prefix3)
+first_usable3 = bits_to_number(network3) + 1
+last_usable3 = bits_to_number(broadcast3) - 1
+
+print("IP Address: \t", bits_to_ip(ip))
+print("Network: \t",bits_to_ip(network))
+print("Broadcast: \t",bits_to_ip(broadcast))
+print("Usable Range: \t",bits_to_ip(number_to_bits(first_usable))," - ",bits_to_ip(number_to_bits(last_usable)))
+print("Usable Hosts: \t", host_count(prefix))
+
+print("\nIP Address: \t", bits_to_ip(ip2))
+print("Network: \t",bits_to_ip(network2))
+print("Broadcast: \t",bits_to_ip(broadcast2))
+print("Usable Range: \t",bits_to_ip(number_to_bits(first_usable2))," - ",bits_to_ip(number_to_bits(last_usable2)))
+print("Usable Hosts: \t", host_count(prefix2))
+
+print("\nIP Address: \t", bits_to_ip(ip3))
+print("Network: \t",bits_to_ip(network3))
+print("Broadcast: \t",bits_to_ip(broadcast3))
+print("Usable Range: \t",bits_to_ip(number_to_bits(first_usable3))," - ",bits_to_ip(number_to_bits(last_usable3)))
+print("Usable Hosts: \t", host_count(prefix3))
